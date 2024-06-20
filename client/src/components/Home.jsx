@@ -1,7 +1,9 @@
-import React from "react";
-import '../css/Home.css';
+import React, { useEffect } from "react";
+import "../css/Home.css";
+import axios from "axios";
 
 const Home = () => {
+  
   return (
     <div className="hero">
       <div className="hero-content">
