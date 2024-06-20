@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
+  try{
   const { username, password, role } = req.body;
   if(role==='admin'){
     const admin = await Admin.findOne({username})
@@ -22,7 +23,27 @@ router.post("/login", async (req, res) => {
 
   }else{
     res.status(400).send("Invalid role");
+  }}catch(er){
+    res.json(er);
   }
 });
 
-export {router as AdminRouter}
+// Protected Route
+const verifyAdmin = (req, res, next) => {
+  const token = req.cookies.token;
+  if(!token) {
+      return res.json({message : "Invalid Admin"})
+  } else {
+      jwt.verify(token, process.env.Admin_Key, (err, decoded) => {
+          if(err) {
+              return res.json({message: "Invalid token"})
+          } else {
+              req.username = decoded.username;
+              req.role = decoded.role;
+              next()
+          }
+      })
+  }
+}
+
+export {router as AdminRouter, verifyAdmin}
