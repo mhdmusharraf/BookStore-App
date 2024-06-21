@@ -5,6 +5,10 @@ import cookieParser from "cookie-parser";
 import "./db.js";
 import { AdminRouter } from "./routes/auth.js";
 import { studentRouter } from "./routes/student.js";
+import { bookRouter } from "./routes/book.js";
+import {Book} from "./models/Book.js";
+import {Student} from "./models/Student.js";
+import {Admin} from "./models/Admin.js";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +22,20 @@ app.use(cookieParser());
 dotenv.config();
 app.use("/auth", AdminRouter);
 app.use("/student", studentRouter);
+app.use("/book", bookRouter);
+
+app.get("/dashboard", async (req, res) => {
+  try {
+    const student = await Student.find().countDocuments();
+    const admin = await Admin.find().countDocuments();
+    const book = await Book.find().countDocuments();
+    return res.json({ ok: true, student, admin, book });
+  } catch (err) {
+    return res.json({ ok: false });
+  }
+})
+
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
