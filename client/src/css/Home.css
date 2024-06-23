@@ -28,7 +28,7 @@
 
 .hero-image {
   flex: 1;
-  background: url("Images/bookshop.jpg") center;
+  background: url("Images/books.png") center;
   background-size: 90%;
   background-repeat: no-repeat;
 }
